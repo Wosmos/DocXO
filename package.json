@@ -1,5 +1,5 @@
 {
-  "name": "jsm_live_docs",
+  "name": "dox-o",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
     "@lexical/link": "^0.21.0",
     "@lexical/list": "^0.21.0",
     "@lexical/react": "^0.16.1",
-    "@lexical/rich-text": "^0.21.0",
+    "@lexical/rich-text": "0.16.1",
     "@liveblocks/client": "^2.3.0",
     "@liveblocks/node": "^2.3.0",
     "@liveblocks/react": "^2.3.0",
