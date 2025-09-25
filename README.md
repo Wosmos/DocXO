@@ -113,3 +113,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 **Built with ❤️ by Collaborative Innovators**
 
 [Join our Discord Community](https://discord.com/invite/your-discord-link)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/Wosmos/DocXO?utm_source=oss&utm_medium=github&utm_campaign=Wosmos%2FDocXO&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
