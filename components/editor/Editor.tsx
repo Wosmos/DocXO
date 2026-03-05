@@ -83,23 +83,25 @@ export function Editor({ roomId, currentUserType, documentTitle = 'Untitled Docu
         </div>
 
         <EditorErrorBoundary>
-          <div className="editor-wrapper flex flex-col items-center justify-start">
+          <div className="editor-wrapper flex flex-col items-center justify-start pb-24 md:pb-0">
             {status === 'not-loaded' || status === 'loading' ? <Loader /> : (
-              <div className="editor-inner min-h-[calc(100vh-200px)] relative mb-5 w-full max-w-[800px] shadow-sm border border-border rounded-b-lg lg:mb-10">
-                <RichTextPlugin
-                  contentEditable={
-                    <ContentEditable className="editor-input h-full" />
-                  }
-                  placeholder={<Placeholder />}
-                  ErrorBoundary={LexicalErrorBoundary}
-                />
-                {currentUserType === 'editor' && <FloatingToolbarPlugin />}
-                <ListPlugin />
-                <LinkPlugin />
-                <ClickableLinkPlugin />
-                <HistoryPlugin />
-                <AutoFocusPlugin />
-                <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card/80 backdrop-blur-sm rounded-b-lg">
+              <div className="flex flex-col min-h-[calc(100vh-200px)] mb-5 w-full max-w-[800px] shadow-sm border border-border rounded-b-lg lg:mb-10">
+                <div className="editor-inner flex-1 relative">
+                  <RichTextPlugin
+                    contentEditable={
+                      <ContentEditable className="editor-input h-full" />
+                    }
+                    placeholder={<Placeholder />}
+                    ErrorBoundary={LexicalErrorBoundary}
+                  />
+                  {currentUserType === 'editor' && <FloatingToolbarPlugin />}
+                  <ListPlugin />
+                  <LinkPlugin />
+                  <ClickableLinkPlugin />
+                  <HistoryPlugin />
+                  <AutoFocusPlugin />
+                </div>
+                <div className="border-t border-border bg-card/80 backdrop-blur-sm rounded-b-lg">
                   <WordCountPlugin />
                 </div>
               </div>

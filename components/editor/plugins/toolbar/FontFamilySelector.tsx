@@ -53,7 +53,7 @@ export default function FontFamilySelector() {
           aria-label="Font family"
           title="Font Family"
         >
-          <span className="text-xs max-w-[90px] truncate">{displayLabel}</span>
+          <span className="text-xs max-w-[60px] md:max-w-[90px] truncate">{displayLabel}</span>
           <ChevronDown size={12} className="ml-1 opacity-50 shrink-0" />
         </button>
       </PopoverTrigger>
