@@ -3,10 +3,11 @@ import DocumentSearch from '@/components/DocumentSearch';
 import Header from '@/components/Header'
 import Notifications from '@/components/Notifications';
 import TemplateModal from '@/components/TemplateModal';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { getDocuments } from '@/lib/actions/room.actions';
 import { UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server';
-import Image from 'next/image';
+import { FileText } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 const Home = async () => {
@@ -16,10 +17,11 @@ const Home = async () => {
   const roomDocuments = await getDocuments(clerkUser.emailAddresses[0].emailAddress);
 
   return (
-    <main className="home-container">
+    <main className="home-container" id="main-content">
       <Header className="sticky left-0 top-0">
-        <div className="flex items-center gap-2 lg:gap-4">
+        <div className="flex items-center gap-2 lg:gap-3">
           <Notifications />
+          <ThemeToggle />
           <UserButton />
         </div>
       </Header>
@@ -27,7 +29,7 @@ const Home = async () => {
       {roomDocuments.data.length > 0 ? (
         <div className="document-list-container">
           <div className="document-list-title">
-            <h3 className="text-28-semibold">All documents</h3>
+            <h3 className="text-28-semibold text-foreground">All documents</h3>
             <div className="flex items-center gap-2">
               <TemplateModal
                 userId={clerkUser.id}
@@ -44,14 +46,8 @@ const Home = async () => {
         </div>
       ): (
         <div className="document-list-empty">
-          <Image
-            src="/assets/icons/doc.svg"
-            alt="Document"
-            width={40}
-            height={40}
-            className="mx-auto"
-          />
-          <p className="text-sm text-blue-100/50">No documents yet. Create one to get started.</p>
+          <FileText className="size-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">No documents yet. Create one to get started.</p>
           <div className="flex items-center gap-2">
             <TemplateModal
               userId={clerkUser.id}

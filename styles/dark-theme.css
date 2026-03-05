@@ -1,44 +1,4 @@
-/* ======================== Lexical Editor */
-
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular',
-    sans-serif;
-  font-weight: 500;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.other h2 {
-  font-size: 18px;
-  color: #444;
-  margin-bottom: 7px;
-}
-
-.other a {
-  color: #777;
-  text-decoration: underline;
-  font-size: 14px;
-}
-
-.other ul {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-}
-
-.App {
-  font-family: sans-serif;
-  text-align: center;
-}
+/* ======================== Lexical Editor Theme */
 
 .ltr {
   text-align: left;
@@ -50,38 +10,39 @@ body {
 
 .editor-container {
   border-radius: 2px;
-  color: #000;
-  line-height: 20px;
+  color: hsl(var(--foreground));
+  line-height: 1.6;
   font-weight: 400;
   text-align: left;
 }
 
 .editor-inner {
-  background: #0b1527;
+  background: hsl(var(--card));
   position: relative;
+  border-radius: 0 0 var(--radius) var(--radius);
 }
 
 .editor-input {
   min-height: 400px;
   resize: none;
-  font-size: 15px;
-  caret-color: rgb(5, 5, 5);
+  font-size: 16px;
+  caret-color: hsl(var(--foreground));
   position: relative;
   tab-size: 1;
   outline: 0;
-  padding: 40px;
-  caret-color: #444;
-  color: #b4c6ee;
+  padding: 32px 40px;
+  color: hsl(var(--foreground));
+  line-height: 1.7;
 }
 
 .editor-placeholder {
-  color: #b4c6ee;
+  color: hsl(var(--muted-foreground));
   overflow: hidden;
   position: absolute;
   text-overflow: ellipsis;
-  top: 40px;
+  top: 32px;
   left: 40px;
-  font-size: 15px;
+  font-size: 16px;
   user-select: none;
   display: inline-block;
   pointer-events: none;
@@ -108,103 +69,90 @@ body {
 }
 
 .editor-text-code {
-  background-color: rgb(240, 242, 245);
-  padding: 1px 0.25rem;
-  font-family: Menlo, Consolas, Monaco, monospace;
-  font-size: 94%;
+  background-color: hsl(var(--muted));
+  padding: 2px 6px;
+  font-family: 'SF Mono', Menlo, Consolas, Monaco, monospace;
+  font-size: 90%;
+  border-radius: 4px;
 }
 
 .editor-link {
-  color: rgb(33, 111, 219);
-  text-decoration: none;
-}
-
-.tree-view-output {
-  display: block;
-  background: #222;
-  color: #fff;
-  padding: 5px;
-  font-size: 12px;
-  white-space: pre-wrap;
-  margin: 1px auto 10px auto;
-  max-height: 250px;
-  position: relative;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  overflow: auto;
-  line-height: 14px;
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .editor-code {
-  background-color: rgb(240, 242, 245);
-  font-family: Menlo, Consolas, Monaco, monospace;
+  background-color: hsl(var(--muted));
+  font-family: 'SF Mono', Menlo, Consolas, Monaco, monospace;
   display: block;
-  padding: 8px 8px 8px 52px;
-  line-height: 1.53;
+  padding: 12px 12px 12px 52px;
+  line-height: 1.6;
   font-size: 13px;
-  margin: 0;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin: 8px 0;
   tab-size: 2;
-  /* white-space: pre; */
   overflow-x: auto;
   position: relative;
+  border-radius: var(--radius);
 }
 
 .editor-code:before {
   content: attr(data-gutter);
   position: absolute;
-  background-color: #eee;
+  background-color: hsl(var(--secondary));
   left: 0;
   top: 0;
-  border-right: 1px solid #ccc;
-  padding: 8px;
-  color: #777;
+  border-right: 1px solid hsl(var(--border));
+  padding: 12px 8px;
+  color: hsl(var(--muted-foreground));
   white-space: pre-wrap;
   text-align: right;
-  min-width: 25px;
+  min-width: 32px;
 }
+
 .editor-code:after {
   content: attr(data-highlight-language);
-  top: 0;
-  right: 3px;
-  padding: 3px;
+  top: 4px;
+  right: 8px;
+  padding: 2px 6px;
   font-size: 10px;
   text-transform: uppercase;
   position: absolute;
-  color: rgba(0, 0, 0, 0.5);
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--secondary));
+  border-radius: 4px;
 }
 
 .editor-tokenComment {
-  color: slategray;
+  color: hsl(var(--muted-foreground));
 }
 
 .editor-tokenPunctuation {
-  color: #999;
+  color: hsl(var(--muted-foreground));
 }
 
 .editor-tokenProperty {
-  color: #905;
+  color: #c084fc;
 }
 
 .editor-tokenSelector {
-  color: #690;
+  color: #4ade80;
 }
 
 .editor-tokenOperator {
-  color: #9a6e3a;
+  color: #fbbf24;
 }
 
 .editor-tokenAttr {
-  color: #07a;
+  color: #38bdf8;
 }
 
 .editor-tokenVariable {
-  color: #e90;
+  color: #fb923c;
 }
 
 .editor-tokenFunction {
-  color: #dd4a68;
+  color: #f472b6;
 }
 
 .editor-paragraph {
@@ -219,32 +167,39 @@ body {
 
 .editor-heading-h1 {
   font-size: 2rem;
+  font-weight: 700;
   margin: 0;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   padding: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .editor-heading-h2 {
   font-size: 1.5rem;
-  margin: 0;
+  font-weight: 600;
+  margin: 24px 0 12px;
   padding: 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .editor-heading-h3 {
   font-size: 1.25rem;
-  margin: 0;
+  font-weight: 600;
+  margin: 20px 0 8px;
   padding: 0;
+  line-height: 1.4;
 }
 
 .editor-quote {
-  margin: 0;
-  margin-left: 20px;
+  margin: 8px 0;
+  margin-left: 0;
   font-size: 15px;
-  color: rgb(101, 103, 107);
-  border-left-color: rgb(206, 208, 212);
-  border-left-width: 4px;
-  border-left-style: solid;
+  color: hsl(var(--muted-foreground));
+  border-left: 3px solid hsl(var(--primary));
   padding-left: 16px;
+  font-style: italic;
 }
 
 .editor-list-ol {
@@ -260,7 +215,7 @@ body {
 }
 
 .editor-listitem {
-  margin: 8px 32px 8px 32px;
+  margin: 4px 32px;
 }
 
 .editor-nested-listitem {
@@ -269,79 +224,45 @@ body {
 
 pre::-webkit-scrollbar {
   background: transparent;
-  width: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 pre::-webkit-scrollbar-thumb {
-  background: #999;
+  background: hsl(var(--border));
+  border-radius: 4px;
 }
 
-.debug-timetravel-panel {
-  overflow: hidden;
-  padding: 0 0 10px 0;
-  margin: auto;
-  display: flex;
-}
-
-.debug-timetravel-panel-slider {
-  padding: 0;
-  flex: 8;
-}
-
-.debug-timetravel-panel-button {
-  padding: 0;
-  border: 0;
-  background: none;
-  flex: 1;
-  color: #fff;
-  font-size: 12px;
-}
-
-.debug-timetravel-panel-button:hover {
-  text-decoration: underline;
-}
-
-.debug-timetravel-button {
-  border: 0;
-  padding: 0;
-  font-size: 12px;
-  top: 10px;
-  right: 15px;
-  position: absolute;
-  background: none;
-  color: #fff;
-}
-
-.debug-timetravel-button:hover {
-  text-decoration: underline;
-}
-
+/* Toolbar */
 .toolbar {
   display: flex;
   margin-bottom: 1px;
-  background: #09111f;
+  background: hsl(var(--card));
   padding: 4px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   vertical-align: middle;
+  gap: 1px;
+  flex-wrap: wrap;
 }
 
 .toolbar button.toolbar-item {
   border: 0;
   display: flex;
   background: none;
-  border-radius: 0px;
+  border-radius: 6px;
   padding: 8px;
   cursor: pointer;
   vertical-align: middle;
+  color: hsl(var(--muted-foreground));
+  transition: background-color 0.15s, color 0.15s;
 }
 
 .toolbar button.toolbar-item:disabled {
   cursor: not-allowed;
+  opacity: 0.3;
 }
 
 .toolbar button.toolbar-item.spaced {
-  margin-right: 2px;
+  margin-right: 1px;
 }
 
 .toolbar button.toolbar-item i.format {
@@ -349,10 +270,9 @@ pre::-webkit-scrollbar-thumb {
   display: inline-block;
   height: 18px;
   width: 18px;
-  margin-top: 2px;
   vertical-align: -0.25em;
   display: flex;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .toolbar button.toolbar-item:disabled i.format {
@@ -360,7 +280,8 @@ pre::-webkit-scrollbar-thumb {
 }
 
 .toolbar button.toolbar-item.active {
-  background-color: #0f1c34;
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 .toolbar button.toolbar-item.active i {
@@ -368,22 +289,22 @@ pre::-webkit-scrollbar-thumb {
 }
 
 .toolbar .toolbar-item:hover:not([disabled]) {
-  background-color: #0f1c34;
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 .toolbar .divider {
   width: 1px;
-  background-color: #0f1c34;
-  margin: 0 4px;
+  background-color: hsl(var(--border));
+  margin: 4px 6px;
 }
 
 .toolbar .toolbar-item .text {
   display: flex;
   line-height: 20px;
-  width: 200px;
   vertical-align: middle;
   font-size: 14px;
-  color: #777;
+  color: hsl(var(--muted-foreground));
   text-overflow: ellipsis;
   width: 70px;
   overflow: hidden;
@@ -401,7 +322,8 @@ pre::-webkit-scrollbar-thumb {
   background-size: contain;
 }
 
-.toolbar-item .format {
+/* Icon filter: invert in dark mode, normal in light */
+.dark .toolbar-item .format {
   filter: invert(1);
 }
 

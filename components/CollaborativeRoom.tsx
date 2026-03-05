@@ -6,11 +6,12 @@ import { SignInButton, UserButton, useAuth } from '@clerk/nextjs'
 import ActiveCollaborators from './ActiveCollaborators';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from './ui/input';
-import Image from 'next/image';
 import { updateDocument } from '@/lib/actions/room.actions';
 import Loader from './Loader';
 import ShareModal from './ShareModal';
 import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense';
+import { Pencil } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: CollaborativeRoomProps) => {
   const { isSignedIn } = useAuth();
@@ -28,7 +29,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
       try {
         if(documentTitle !== roomMetadata.title) {
           const updatedDocument = await updateDocument(roomId, documentTitle);
-          
+
           if(updatedDocument) {
             setEditing(false);
           }
@@ -61,7 +62,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
       inputRef.current.focus();
     }
   }, [editing])
-  
+
 
   return (
     <RoomProvider id={roomId}>
@@ -70,7 +71,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
           <Header>
             <div ref={containerRef} className="flex w-fit items-center justify-center gap-2">
               {editing && !loading ? (
-                <Input 
+                <Input
                   type="text"
                   value={documentTitle}
                   ref={inputRef}
@@ -87,31 +88,32 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
               )}
 
               {currentUserType === 'editor' && !editing && (
-                <Image 
-                  src="/assets/icons/edit.svg"
-                  alt="edit"
-                  width={24}
-                  height={24}
+                <button
                   onClick={() => setEditing(true)}
-                  className="pointer"
-                />
+                  className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                  aria-label="Edit title"
+                >
+                  <Pencil className="size-4" />
+                </button>
               )}
 
               {currentUserType !== 'editor' && !editing && (
                 <p className="view-only-tag">View only</p>
               )}
 
-              {loading && <p className="text-sm text-gray-400">saving...</p>}
+              {loading && <p className="text-sm text-muted-foreground">saving...</p>}
             </div>
             <div className="flex w-full flex-1 justify-end gap-2 sm:gap-3">
               <ActiveCollaborators />
 
-              <ShareModal 
+              <ShareModal
                 roomId={roomId}
                 collaborators={users}
                 creatorId={roomMetadata.creatorId}
                 currentUserType={currentUserType}
               />
+
+              <ThemeToggle />
 
               {isSignedIn ? (
                 <UserButton />

@@ -9,6 +9,7 @@ import { InboxNotification, InboxNotificationList, LiveblocksUIConfig } from "@l
 import { useInboxNotifications, useUnreadInboxNotificationsCount } from "@liveblocks/react/suspense"
 import Image from "next/image"
 import { ReactNode } from "react"
+import { Bell } from "lucide-react"
 
 const Notifications = () => {
   const { inboxNotifications } = useInboxNotifications();
@@ -18,16 +19,13 @@ const Notifications = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className='relative flex size-10 items-center justify-center rounded-lg'>
-        <Image
-          src='/assets/icons/bell.svg'
-          alt='inbox'
-          width={24}
-          height={24}
-          className='hover:scale-125 hover:rotate-12 ease-in-out transition-all duration-300 cursor-pointer'
-        />
+      <PopoverTrigger className='relative inline-flex size-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+        <Bell className="size-4" />
+        <span className="sr-only">Notifications</span>
         {count > 0 && (
-          <div className='absolute right-2 top-2 z-20 size-2 rounded-full bg-blue-500' />
+          <span className='absolute -right-0.5 -top-0.5 z-20 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground'>
+            {count > 9 ? '9+' : count}
+          </span>
         )}
       </PopoverTrigger>
       <PopoverContent align='end' className='shad-popover'>
@@ -40,7 +38,7 @@ const Notifications = () => {
         >
           <InboxNotificationList>
             {unreadNotifications.length <= 0 && (
-              <p className='py-2 text-center text-dark-500'>
+              <p className='py-4 text-center text-sm text-muted-foreground'>
                 No new notifications
               </p>
             )}
@@ -50,7 +48,7 @@ const Notifications = () => {
                 <InboxNotification
                   key={notification.id}
                   inboxNotification={notification}
-                  className='bg-dark-200 text-white'
+                  className='bg-card text-foreground'
                   href={`/documents/${notification.roomId}`}
                   showActions={false}
                   kinds={{

@@ -25,12 +25,8 @@ import { useThreads } from '@liveblocks/react/suspense';
 import Comments from '../Comments';
 import { DeleteModal } from '../DeleteModal';
 
-// Catch any errors that occur during Lexical updates and log them
-// or throw them as needed. If you don't throw them, Lexical will
-// try to recover gracefully without losing user data.
-
 function Placeholder() {
-  return <div className="editor-placeholder">Enter some rich text...</div>;
+  return <div className="editor-placeholder">Start writing...</div>;
 }
 
 export function Editor({ roomId, currentUserType }: { roomId: string, currentUserType: UserType }) {
@@ -58,7 +54,7 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
 
         <div className="editor-wrapper flex flex-col items-center justify-start">
           {status === 'not-loaded' || status === 'loading' ? <Loader /> : (
-            <div className="editor-inner min-h-[1100px] relative mb-5 h-fit w-full max-w-[800px] shadow-md lg:mb-10">
+            <div className="editor-inner min-h-[1100px] relative mb-5 h-fit w-full max-w-[800px] shadow-sm border border-border rounded-b-lg lg:mb-10">
               <RichTextPlugin
                 contentEditable={
                   <ContentEditable className="editor-input h-full" />
@@ -71,7 +67,7 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
               <LinkPlugin />
               <HistoryPlugin />
               <AutoFocusPlugin />
-              <div className="absolute bottom-0 left-0 right-0 border-t border-dark-300 bg-dark-100/80 backdrop-blur-sm">
+              <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card/80 backdrop-blur-sm rounded-b-lg">
                 <WordCountPlugin />
               </div>
             </div>

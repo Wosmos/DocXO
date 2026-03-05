@@ -2,10 +2,10 @@
 
 import { createDocument } from '@/lib/actions/room.actions';
 import { Button } from './ui/button'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { Plus } from 'lucide-react';
 
 const AddDocumentBtn = ({ userId, email }: AddDocumentBtnProps) => {
   const router = useRouter();
@@ -32,15 +32,10 @@ const AddDocumentBtn = ({ userId, email }: AddDocumentBtnProps) => {
       type='submit'
       onClick={addDocumentHandler}
       disabled={creating}
-      className='border border-blue-400 hover:bg-blue-400 flex gap-1 shadow-md hover:scale-105 transition-all duration-300 ease-in-out rounded-xl'
+      className='flex gap-1.5 rounded-lg transition-all duration-200'
     >
-      <Image
-        src='/assets/icons/add.svg'
-        alt='add'
-        width={24}
-        height={24}
-      />
-      <p className='hidden sm:block'>{creating ? 'Creating...' : 'New document'}</p>
+      <Plus className="size-4" />
+      <span className='hidden sm:block'>{creating ? 'Creating...' : 'New document'}</span>
     </Button>
   );
 }

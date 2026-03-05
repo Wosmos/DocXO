@@ -1,8 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { Trash2 } from 'lucide-react';
 
 import { deleteDocument } from '@/lib/actions/room.actions';
 
@@ -40,41 +40,34 @@ export const DeleteModal = ({ roomId }: DeleteModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className='min-w-9 rounded-xl bg-transparent p-2 transition-all'>
-          <Image
-            src='/assets/icons/delete.svg'
-            alt='delete'
-            width={20}
-            height={20}
-            className='mt-1 hover:scale-125 hover:-rotate-12 ease-in-out transition-all duration-300'
-          />
+        <Button variant="ghost" size="icon" className='size-9 text-muted-foreground hover:text-destructive transition-colors'>
+          <Trash2 className="size-4" />
+          <span className="sr-only">Delete document</span>
         </Button>
       </DialogTrigger>
       <DialogContent className='shad-dialog'>
         <DialogHeader>
-          <Image
-            src='/assets/icons/delete-modal.svg'
-            alt='delete'
-            width={48}
-            height={48}
-            className='mb-4'
-          />
-          <DialogTitle>Delete document</DialogTitle>
-          <DialogDescription>
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-destructive/10">
+            <Trash2 className="size-5 text-destructive" />
+          </div>
+          <DialogTitle className="text-center">Delete document</DialogTitle>
+          <DialogDescription className="text-center">
             Are you sure you want to delete this document? This action cannot be
             undone.
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className='mt-5'>
-          <DialogClose asChild className='w-full bg-dark-400 text-white'>
-            Cancel
+        <DialogFooter className='mt-5 gap-2'>
+          <DialogClose asChild>
+            <Button variant="outline" className='w-full'>
+              Cancel
+            </Button>
           </DialogClose>
 
           <Button
             variant='destructive'
             onClick={deleteDocumentHandler}
-            className='gradient-red w-full'
+            className='w-full'
           >
             {loading ? 'Deleting...' : 'Delete'}
           </Button>

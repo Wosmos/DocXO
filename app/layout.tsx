@@ -2,11 +2,12 @@ import { Inter as FontSans } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 import './globals.css'
-import { Metadata } from "next"
+import { Metadata, Viewport } from "next"
 import { ClerkProvider } from "@clerk/nextjs"
 import { dark } from "@clerk/themes"
 import Provider from "./Provider"
 import { Toaster } from "sonner"
+import { ThemeProvider } from "@/components/ThemeProvider"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -14,8 +15,19 @@ const fontSans = FontSans({
 })
 
 export const metadata: Metadata = {
-  title: 'LiveDocs',
-  description: 'Your go-to collaborative editor',
+  title: 'Wosmo',
+  description: 'Collaborative writing, beautifully simple.',
+  icons: { icon: '/favicon.ico' },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f0f11' },
+  ],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -23,9 +35,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider
       appearance={{
         baseTheme: dark,
-        variables: { 
-          colorPrimary: "#3371FF" ,
-          fontSize: '16px'
+        variables: {
+          colorPrimary: "#6366f1",
+          fontSize: '16px',
         },
       }}
     >
@@ -36,20 +48,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             fontSans.variable
           )}
         >
-          <Provider>
-            {children}
-          </Provider>
-          <Toaster
-            theme="dark"
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                background: '#0B1527',
-                border: '1px solid #0F1C34',
-                color: '#fff',
-              },
-            }}
-          />
+          <ThemeProvider>
+            <a href="#main-content" className="skip-to-content">
+              Skip to content
+            </a>
+            <Provider>
+              {children}
+            </Provider>
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                className: 'border border-border bg-card text-card-foreground',
+              }}
+            />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

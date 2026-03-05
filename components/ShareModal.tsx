@@ -9,17 +9,16 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-
 import React, { useState } from 'react';
 import { useSelf } from '@liveblocks/react/suspense';
 import { Button } from './ui/button';
-import Image from 'next/image';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import UserTypeSelector from './UserTypeSelector';
 import Collaborator from './Collaborator';
 import { updateDocumentAccess } from '@/lib/actions/room.actions';
 import { toast } from 'sonner';
+import { Share2 } from 'lucide-react';
 
 const ShareModal = ({
   roomId,
@@ -58,17 +57,11 @@ const ShareModal = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button
-          className='gradient-blue flex h-9 gap-1 px-4'
+          className='flex h-9 gap-1.5 px-3'
           disabled={currentUserType !== 'editor'}
         >
-          <Image
-            src='/assets/icons/share.svg'
-            alt='share'
-            width={20}
-            height={20}
-            className='min-w-4 md:size-5'
-          />
-          <p className='mr-1 hidden sm:block'>Share</p>
+          <Share2 className="size-4" />
+          <span className='hidden sm:block'>Share</span>
         </Button>
       </DialogTrigger>
       <DialogContent className='shad-dialog'>
@@ -77,16 +70,16 @@ const ShareModal = ({
           <DialogDescription>
             Select which users can view and edit this document
           </DialogDescription>
-          <DialogDescription className='font-bold text-red-400'>
-            Only add regestered members ⚠️{' '}
+          <DialogDescription className='font-medium text-destructive'>
+            Only add registered members
           </DialogDescription>
         </DialogHeader>
 
-        <Label htmlFor='email' className='mt-6 text-blue-100'>
+        <Label htmlFor='email' className='mt-6 text-foreground'>
           Email address
         </Label>
         <div className='flex items-center gap-3'>
-          <div className='flex flex-1 rounded-md bg-dark-400'>
+          <div className='flex flex-1 rounded-md bg-muted'>
             <Input
               id='email'
               placeholder='Enter email address'
@@ -99,7 +92,7 @@ const ShareModal = ({
           <Button
             type='submit'
             onClick={shareDocumentHandler}
-            className='gradient-blue flex h-full gap-1 px-5'
+            className='flex h-full gap-1 px-5'
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Invite'}

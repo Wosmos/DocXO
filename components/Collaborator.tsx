@@ -11,11 +11,11 @@ const Collaborator = ({ roomId, creatorId, collaborator, email, user }: Collabor
   const shareDocumentHandler = async (type: string) => {
     setLoading(true);
 
-    await updateDocumentAccess({ 
-      roomId, 
-      email, 
-      userType: type as UserType, 
-      updatedBy: user 
+    await updateDocumentAccess({
+      roomId,
+      email,
+      userType: type as UserType,
+      updatedBy: user
     });
 
     setLoading(false);
@@ -30,9 +30,9 @@ const Collaborator = ({ roomId, creatorId, collaborator, email, user }: Collabor
   }
 
   return (
-    <li className="flex items-center justify-between gap-2 py-3">
-      <div className="flex gap-2">
-        <Image 
+    <li className="flex items-center justify-between gap-2 py-3 border-b border-border last:border-0">
+      <div className="flex gap-3 items-center">
+        <Image
           src={collaborator.avatar}
           alt={collaborator.name}
           width={36}
@@ -40,28 +40,33 @@ const Collaborator = ({ roomId, creatorId, collaborator, email, user }: Collabor
           className="size-9 rounded-full"
         />
         <div>
-          <p className="line-clamp-1 text-sm font-semibold leading-4 text-white">
+          <p className="line-clamp-1 text-sm font-medium leading-5 text-foreground">
             {collaborator.name}
-            <span className="text-10-regular pl-2 text-blue-100">
+            <span className="text-10-regular pl-2 text-muted-foreground">
               {loading && 'updating...'}
             </span>
           </p>
-          <p className="text-sm font-light text-blue-100">
+          <p className="text-sm text-muted-foreground">
             {collaborator.email}
           </p>
         </div>
       </div>
 
       {creatorId === collaborator.id ? (
-        <p className="text-sm text-blue-100">Owner</p>
+        <p className="text-sm font-medium text-muted-foreground">Owner</p>
       ): (
-        <div className="flex items-center">
-          <UserTypeSelector 
+        <div className="flex items-center gap-1">
+          <UserTypeSelector
             userType={userType as UserType}
             setUserType={setUserType || 'viewer'}
             onClickHandler={shareDocumentHandler}
           />
-          <Button type="button" onClick={() => removeCollaboratorHandler(collaborator.email)}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => removeCollaboratorHandler(collaborator.email)}
+            className="remove-btn text-sm"
+          >
             Remove
           </Button>
         </div>

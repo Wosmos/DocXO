@@ -29,9 +29,9 @@ export default function WordCountPlugin() {
   }, [editor, calculateStats]);
 
   return (
-    <div className="flex items-center gap-4 px-4 py-2 text-xs text-blue-100/60">
+    <div className="flex items-center gap-4 px-4 py-2 text-xs text-muted-foreground" role="status" aria-label="Document statistics">
       <span>{stats.words} words</span>
-      <span>{stats.chars} characters</span>
+      <span className="hidden sm:inline">{stats.chars} characters</span>
       <span>{stats.readTime}</span>
     </div>
   );
