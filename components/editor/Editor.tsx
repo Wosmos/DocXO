@@ -2,7 +2,11 @@
 
 import Theme from './plugins/Theme';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
-import { HeadingNode } from '@lexical/rich-text';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import { ListNode, ListItemNode } from '@lexical/list';
+import { LinkNode, AutoLinkNode } from '@lexical/link';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
@@ -15,6 +19,8 @@ import { FloatingComposer, FloatingThreads, liveblocksConfig, LiveblocksPlugin, 
 import Loader from '../Loader';
 
 import FloatingToolbarPlugin from './plugins/FloatingToolbarPlugin'
+import WordCountPlugin from './plugins/WordCountPlugin'
+import ShortcutsPlugin from './plugins/ShortcutsPlugin'
 import { useThreads } from '@liveblocks/react/suspense';
 import Comments from '../Comments';
 import { DeleteModal } from '../DeleteModal';
@@ -33,7 +39,7 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
 
   const initialConfig = liveblocksConfig({
     namespace: 'Editor',
-    nodes: [HeadingNode],
+    nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, AutoLinkNode],
     onError: (error: Error) => {
       console.error(error);
       throw error;
@@ -61,8 +67,13 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
                 ErrorBoundary={LexicalErrorBoundary}
               />
               {currentUserType === 'editor' && <FloatingToolbarPlugin />}
+              <ListPlugin />
+              <LinkPlugin />
               <HistoryPlugin />
               <AutoFocusPlugin />
+              <div className="absolute bottom-0 left-0 right-0 border-t border-dark-300 bg-dark-100/80 backdrop-blur-sm">
+                <WordCountPlugin />
+              </div>
             </div>
           )}
 
@@ -71,6 +82,7 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
             <FloatingThreads threads={threads} />
             <Comments />
           </LiveblocksPlugin>
+          <ShortcutsPlugin />
         </div>
       </div>
     </LexicalComposer>

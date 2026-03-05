@@ -4,7 +4,8 @@ import { getClerkUsers } from '@/lib/actions/user.actions';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
-const Document = async ({ params: { id } }: SearchParamProps) => {
+const Document = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
   const clerkUser = await currentUser();
   if (!clerkUser) redirect('/sign-in');
 
@@ -21,7 +22,6 @@ const Document = async ({ params: { id } }: SearchParamProps) => {
   const users = await getClerkUsers({ userIds });
 
   const usersData = users.map((user: User) => {
-    // Safely handle potential missing email
     const userEmail = user.email || '';
     return {
       ...user,

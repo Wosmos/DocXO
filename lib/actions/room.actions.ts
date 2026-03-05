@@ -25,28 +25,30 @@ export const createDocument = async ({ userId, email }: CreateDocumentParams) =>
       usersAccesses,
       defaultAccesses: []
     });
-    
+
     revalidatePath('/');
 
     return parseStringify(room);
   } catch (error) {
-    console.log(`Error happened while creating a room: ${error}`);
+    console.error(`Failed to create document:`, error);
+    throw new Error('Failed to create document. Please try again.');
   }
 }
 
 export const getDocument = async ({ roomId, userId }: { roomId: string; userId: string }) => {
   try {
-      const room = await liveblocks.getRoom(roomId);
-    
-      const hasAccess = Object.keys(room.usersAccesses).includes(userId);
-    
-      if(!hasAccess) {
-        throw new Error('You do not have access to this document');
-      }
-    
-      return parseStringify(room);
+    const room = await liveblocks.getRoom(roomId);
+
+    const hasAccess = Object.keys(room.usersAccesses).includes(userId);
+
+    if(!hasAccess) {
+      throw new Error('You do not have access to this document');
+    }
+
+    return parseStringify(room);
   } catch (error) {
-    console.log(`Error happened while getting a room: ${error}`);
+    console.error(`Failed to get document ${roomId}:`, error);
+    throw new Error('Failed to load document. You may not have access.');
   }
 }
 
@@ -62,17 +64,19 @@ export const updateDocument = async (roomId: string, title: string) => {
 
     return parseStringify(updatedRoom);
   } catch (error) {
-    console.log(`Error happened while updating a room: ${error}`);
+    console.error(`Failed to update document ${roomId}:`, error);
+    throw new Error('Failed to update document title.');
   }
 }
 
-export const getDocuments = async (email: string ) => {
+export const getDocuments = async (email: string) => {
   try {
-      const rooms = await liveblocks.getRooms({ userId: email });
-    
-      return parseStringify(rooms);
+    const rooms = await liveblocks.getRooms({ userId: email });
+
+    return parseStringify(rooms);
   } catch (error) {
-    console.log(`Error happened while getting rooms: ${error}`);
+    console.error(`Failed to get documents for ${email}:`, error);
+    throw new Error('Failed to load documents.');
   }
 }
 
@@ -82,7 +86,7 @@ export const updateDocumentAccess = async ({ roomId, email, userType, updatedBy 
       [email]: getAccessType(userType) as AccessType,
     }
 
-    const room = await liveblocks.updateRoom(roomId, { 
+    const room = await liveblocks.updateRoom(roomId, {
       usersAccesses
     })
 
@@ -107,7 +111,8 @@ export const updateDocumentAccess = async ({ roomId, email, userType, updatedBy 
     revalidatePath(`/documents/${roomId}`);
     return parseStringify(room);
   } catch (error) {
-    console.log(`Error happened while updating a room access: ${error}`);
+    console.error(`Failed to share document ${roomId}:`, error);
+    throw new Error('Failed to share document. Make sure the email is registered.');
   }
 }
 
@@ -128,7 +133,8 @@ export const removeCollaborator = async ({ roomId, email }: {roomId: string, ema
     revalidatePath(`/documents/${roomId}`);
     return parseStringify(updatedRoom);
   } catch (error) {
-    console.log(`Error happened while removing a collaborator: ${error}`);
+    console.error(`Failed to remove collaborator from ${roomId}:`, error);
+    throw new Error('Failed to remove collaborator.');
   }
 }
 
@@ -138,6 +144,11 @@ export const deleteDocument = async (roomId: string) => {
     revalidatePath('/');
     redirect('/');
   } catch (error) {
-    console.log(`Error happened while deleting a room: ${error}`);
+    // redirect() throws a special error internally — rethrow it
+    if ((error as any)?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
+    console.error(`Failed to delete document ${roomId}:`, error);
+    throw new Error('Failed to delete document.');
   }
 }

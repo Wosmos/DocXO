@@ -1,9 +1,8 @@
 'use client';
 
-import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense'
 import { Editor } from '@/components/editor/Editor'
 import Header from '@/components/Header'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
+import { SignInButton, UserButton, useAuth } from '@clerk/nextjs'
 import ActiveCollaborators from './ActiveCollaborators';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from './ui/input';
@@ -11,14 +10,16 @@ import Image from 'next/image';
 import { updateDocument } from '@/lib/actions/room.actions';
 import Loader from './Loader';
 import ShareModal from './ShareModal';
+import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense';
 
 const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: CollaborativeRoomProps) => {
+  const { isSignedIn } = useAuth();
   const [documentTitle, setDocumentTitle] = useState(roomMetadata.title);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const updateTitleHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if(e.key === 'Enter') {
@@ -65,7 +66,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
   return (
     <RoomProvider id={roomId}>
       <ClientSideSuspense fallback={<Loader />}>
-        <div className="collaborative-room">
+        {() => (<div className="collaborative-room">
           <Header>
             <div ref={containerRef} className="flex w-fit items-center justify-center gap-2">
               {editing && !loading ? (
@@ -76,7 +77,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
                   placeholder="Enter title"
                   onChange={(e) => setDocumentTitle(e.target.value)}
                   onKeyDown={updateTitleHandler}
-                  disable={!editing}
+                  disabled={!editing}
                   className="document-title-input"
                 />
               ) : (
@@ -112,16 +113,15 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
                 currentUserType={currentUserType}
               />
 
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
+              {isSignedIn ? (
                 <UserButton />
-              </SignedIn>
+              ) : (
+                <SignInButton />
+              )}
             </div>
           </Header>
         <Editor roomId={roomId} currentUserType={currentUserType} />
-        </div>
+        </div>)}
       </ClientSideSuspense>
     </RoomProvider>
   )

@@ -22,7 +22,7 @@ declare type CreateDocumentParams = {
 };
 
 declare type User = {
-  emailAddresses: any;
+  emailAddresses?: any;
   id: string;
   name: string;
   email: string;

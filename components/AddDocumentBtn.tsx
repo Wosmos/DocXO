@@ -4,17 +4,26 @@ import { createDocument } from '@/lib/actions/room.actions';
 import { Button } from './ui/button'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const AddDocumentBtn = ({ userId, email }: AddDocumentBtnProps) => {
   const router = useRouter();
+  const [creating, setCreating] = useState(false);
 
   const addDocumentHandler = async () => {
+    setCreating(true);
     try {
       const room = await createDocument({ userId, email });
 
-      if(room) router.push(`/documents/${room.id}`);
+      if(room) {
+        toast.success('Document created');
+        router.push(`/documents/${room.id}`);
+      }
     } catch (error) {
-      console.log(error)
+      toast.error('Failed to create document');
+    } finally {
+      setCreating(false);
     }
   }
 
@@ -22,6 +31,7 @@ const AddDocumentBtn = ({ userId, email }: AddDocumentBtnProps) => {
     <Button
       type='submit'
       onClick={addDocumentHandler}
+      disabled={creating}
       className='border border-blue-400 hover:bg-blue-400 flex gap-1 shadow-md hover:scale-105 transition-all duration-300 ease-in-out rounded-xl'
     >
       <Image
@@ -29,9 +39,8 @@ const AddDocumentBtn = ({ userId, email }: AddDocumentBtnProps) => {
         alt='add'
         width={24}
         height={24}
-        className=''
       />
-      <p className='hidden sm:block'>New document</p>
+      <p className='hidden sm:block'>{creating ? 'Creating...' : 'New document'}</p>
     </Button>
   );
 }

@@ -1,11 +1,10 @@
+@import '@liveblocks/react-ui/styles.css';
+@import '@liveblocks/react-lexical/styles.css';
+@import '../styles/dark-theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import '@liveblocks/react-ui/styles.css';
-@import '@liveblocks/react-lexical/styles.css';
-
-@import '../styles/dark-theme.css';
 
 /* ========================================== TAILWIND STYLES */
 @layer base {

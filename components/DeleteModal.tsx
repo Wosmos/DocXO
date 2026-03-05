@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { deleteDocument } from '@/lib/actions/room.actions';
 
@@ -27,9 +28,10 @@ export const DeleteModal = ({ roomId }: DeleteModalProps) => {
 
     try {
       await deleteDocument(roomId);
+      toast.success('Document deleted');
       setOpen(false);
     } catch (error) {
-      console.log('Error notif:', error);
+      toast.error('Failed to delete document');
     }
 
     setLoading(false);

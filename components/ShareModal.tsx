@@ -9,8 +9,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import { useSelf } from '@liveblocks/react/suspense';
+
 import React, { useState } from 'react';
+import { useSelf } from '@liveblocks/react/suspense';
 import { Button } from './ui/button';
 import Image from 'next/image';
 import { Label } from './ui/label';
@@ -18,6 +19,7 @@ import { Input } from './ui/input';
 import UserTypeSelector from './UserTypeSelector';
 import Collaborator from './Collaborator';
 import { updateDocumentAccess } from '@/lib/actions/room.actions';
+import { toast } from 'sonner';
 
 const ShareModal = ({
   roomId,
@@ -36,12 +38,18 @@ const ShareModal = ({
   const shareDocumentHandler = async () => {
     setLoading(true);
 
-    await updateDocumentAccess({
-      roomId,
-      email,
-      userType: userType as UserType,
-      updatedBy: user.info,
-    });
+    try {
+      await updateDocumentAccess({
+        roomId,
+        email,
+        userType: userType as UserType,
+        updatedBy: user.info,
+      });
+      toast.success(`Invited ${email} as ${userType}`);
+      setEmail('');
+    } catch (error) {
+      toast.error('Failed to share document');
+    }
 
     setLoading(false);
   };

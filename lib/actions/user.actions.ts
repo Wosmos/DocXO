@@ -6,7 +6,8 @@ import { liveblocks } from "../liveblocks";
 
 export const getClerkUsers = async ({ userIds }: { userIds: string[]}) => {
   try {
-    const { data } = await clerkClient.users.getUserList({
+    const client = await clerkClient();
+    const { data } = await client.users.getUserList({
       emailAddress: userIds,
     });
 
@@ -21,7 +22,8 @@ export const getClerkUsers = async ({ userIds }: { userIds: string[]}) => {
 
     return parseStringify(sortedUsers);
   } catch (error) {
-    console.log(`Error fetching users: ${error}`);
+    console.error(`Error fetching users:`, error);
+    throw new Error('Failed to fetch users.');
   }
 }
 
@@ -41,6 +43,7 @@ export const getDocumentUsers = async ({ roomId, currentUser, text }: { roomId: 
 
     return parseStringify(users);
   } catch (error) {
-    console.log(`Error fetching document users: ${error}`);
+    console.error(`Error fetching document users:`, error);
+    throw new Error('Failed to fetch document users.');
   }
 }
