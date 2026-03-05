@@ -14,6 +14,7 @@ export default {
     h3: 'editor-heading-h3',
     h4: 'editor-heading-h4',
     h5: 'editor-heading-h5',
+    h6: 'editor-heading-h6',
   },
   image: 'editor-image',
   link: 'editor-link',

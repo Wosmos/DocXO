@@ -80,6 +80,7 @@
   color: hsl(var(--primary));
   text-decoration: underline;
   text-underline-offset: 2px;
+  cursor: pointer;
 }
 
 .editor-code {
@@ -190,6 +191,31 @@
   margin: 20px 0 8px;
   padding: 0;
   line-height: 1.4;
+}
+
+.editor-heading-h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 16px 0 6px;
+  padding: 0;
+  line-height: 1.4;
+}
+
+.editor-heading-h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 12px 0 4px;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.editor-heading-h6 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 10px 0 4px;
+  padding: 0;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
 }
 
 .editor-quote {
@@ -306,5 +332,83 @@ pre::-webkit-scrollbar-thumb {
   margin-right: 8px;
   line-height: 16px;
   background-size: contain;
+}
+
+/* Toolbar select dropdowns (font size, font family) */
+.toolbar .toolbar-select {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.toolbar .toolbar-select:hover {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--border));
+}
+
+/* Color indicator bar under icons */
+.color-indicator {
+  width: 16px;
+  height: 3px;
+  border-radius: 1px;
+  margin-top: 1px;
+}
+
+/* Color picker grid */
+.color-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid hsl(var(--border));
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.color-swatch.active {
+  box-shadow: 0 0 0 2px hsl(var(--primary));
+}
+
+/* Native color picker input */
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid hsl(var(--border));
+  border-radius: 4px;
+  background: transparent;
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 2px;
 }
 

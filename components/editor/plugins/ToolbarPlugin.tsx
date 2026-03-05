@@ -8,7 +8,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
 import {
-  $createParagraphNode,
   $isRootOrShadowRoot,
   $getSelection,
   $isRangeSelection,
@@ -19,14 +18,8 @@ import {
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
-  ElementNode,
 } from 'lexical';
-import {
-  $createHeadingNode,
-  $createQuoteNode,
-  $isHeadingNode,
-} from '@lexical/rich-text';
-import { $setBlocksType } from '@lexical/selection';
+import { $isHeadingNode } from '@lexical/rich-text';
 import { $findMatchingParent } from '@lexical/utils';
 import {
   INSERT_ORDERED_LIST_COMMAND,
@@ -53,10 +46,6 @@ import {
   Italic,
   Underline,
   Strikethrough,
-  Heading1,
-  Heading2,
-  Heading3,
-  Quote,
   Code,
   List,
   ListOrdered,
@@ -65,7 +54,15 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
+  Baseline,
+  Highlighter,
 } from 'lucide-react';
+import FontSizeSelector from './toolbar/FontSizeSelector';
+import FontFamilySelector from './toolbar/FontFamilySelector';
+import HeadingSelector from './toolbar/HeadingSelector';
+import ColorPicker from './toolbar/ColorPicker';
+import ExportMenu from './toolbar/ExportMenu';
+import { PRESET_COLORS, HIGHLIGHT_COLORS } from './toolbar/constants';
 
 const LowPriority = 1;
 const ICON_SIZE = 18;
@@ -74,7 +71,7 @@ function Divider() {
   return <div className="divider" />;
 }
 
-export default function ToolbarPlugin() {
+export default function ToolbarPlugin({ documentTitle = 'Untitled Document' }: { documentTitle?: string }) {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
   const [canUndo, setCanUndo] = useState(false);
@@ -136,35 +133,6 @@ export default function ToolbarPlugin() {
     );
   }, [editor, $updateToolbar]);
 
-  function toggleBlock(type: 'h1' | 'h2' | 'h3' | 'quote') {
-    const selection = $getSelection();
-
-    if (activeBlock === type) {
-      return $setBlocksType(selection, () => $createParagraphNode());
-    }
-    if (type === 'h1') {
-      return $setBlocksType(selection, () => {
-        const node = $createHeadingNode('h1');
-        return node as ElementNode;
-      });
-    }
-
-    if (type === 'h2') {
-      return $setBlocksType(selection, () => {
-        const node = $createHeadingNode('h2');
-        return node as ElementNode;
-      });
-    }
-
-    if (type === 'h3') {
-      return $setBlocksType(selection, () => $createHeadingNode('h3'));
-    }
-
-    if (type === 'quote') {
-      return $setBlocksType(selection, () => $createQuoteNode());
-    }
-  }
-
   const [linkUrl, setLinkUrl] = useState('');
   const [linkOpen, setLinkOpen] = useState(false);
 
@@ -211,49 +179,10 @@ export default function ToolbarPlugin() {
         <Redo2 size={ICON_SIZE} />
       </button>
       <Divider />
-      <button
-        onClick={() => editor.update(() => toggleBlock('h1'))}
-        aria-pressed={activeBlock === 'h1'}
-        className={
-          'toolbar-item spaced ' + (activeBlock === 'h1' ? 'active' : '')
-        }
-        aria-label="Heading 1"
-        title="Heading 1"
-      >
-        <Heading1 size={ICON_SIZE} />
-      </button>
-      <button
-        onClick={() => editor.update(() => toggleBlock('h2'))}
-        aria-pressed={activeBlock === 'h2'}
-        className={
-          'toolbar-item spaced ' + (activeBlock === 'h2' ? 'active' : '')
-        }
-        aria-label="Heading 2"
-        title="Heading 2"
-      >
-        <Heading2 size={ICON_SIZE} />
-      </button>
-      <button
-        onClick={() => editor.update(() => toggleBlock('h3'))}
-        aria-pressed={activeBlock === 'h3'}
-        className={
-          'toolbar-item spaced ' + (activeBlock === 'h3' ? 'active' : '')
-        }
-        aria-label="Heading 3"
-        title="Heading 3"
-      >
-        <Heading3 size={ICON_SIZE} />
-      </button>
-      <button
-        onClick={() => editor.update(() => toggleBlock('quote'))}
-        className={
-          'toolbar-item spaced ' + (activeBlock === 'quote' ? 'active' : '')
-        }
-        aria-label="Block Quote"
-        title="Block Quote"
-      >
-        <Quote size={ICON_SIZE} />
-      </button>
+      <FontFamilySelector />
+      <FontSizeSelector />
+      <Divider />
+      <HeadingSelector activeBlock={activeBlock} />
       <Divider />
       <button
         onClick={() => {
@@ -309,6 +238,21 @@ export default function ToolbarPlugin() {
       >
         <Code size={ICON_SIZE} />
       </button>
+      <Divider />
+      <ColorPicker
+        property="color"
+        presetColors={PRESET_COLORS}
+        defaultValue=""
+        icon={<Baseline size={ICON_SIZE} />}
+        title="Font Color"
+      />
+      <ColorPicker
+        property="background-color"
+        presetColors={HIGHLIGHT_COLORS}
+        defaultValue="transparent"
+        icon={<Highlighter size={ICON_SIZE} />}
+        title="Highlight Color"
+      />
       <Divider />
       <button
         onClick={() => {
@@ -407,6 +351,8 @@ export default function ToolbarPlugin() {
       >
         <AlignJustify size={ICON_SIZE} />
       </button>
+      <Divider />
+      <ExportMenu documentTitle={documentTitle} />
     </div>
   );
 }

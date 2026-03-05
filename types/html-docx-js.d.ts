@@ -1,4 +1,4 @@
-declare module 'html-docx-js/dist/html-docx.ts' {
+declare module 'html-docx-js/dist/html-docx' {
   const htmlDocx: {
     asBlob: (html: string) => Blob;
   };

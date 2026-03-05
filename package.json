@@ -14,6 +14,7 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@lexical/html": "^0.24.0",
     "@lexical/link": "0.24.0",
     "@lexical/list": "0.24.0",
     "@lexical/react": "0.24.0",
@@ -30,10 +31,12 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@sentry/nextjs": "^8.18.0",
+    "@types/turndown": "^5.0.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "file-saver": "^2.0.5",
     "html-docx-js": "^0.3.1",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
     "lexical": "0.24.0",
     "lucide-react": "^0.408.0",
@@ -45,7 +48,8 @@
     "react-dom": "latest",
     "sonner": "^2.0.7",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "turndown": "^7.2.2"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",

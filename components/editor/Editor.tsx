@@ -13,6 +13,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { ClickableLinkPlugin } from '@lexical/react/LexicalClickableLinkPlugin';
 import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 
 import { FloatingComposer, FloatingThreads, liveblocksConfig, LiveblocksPlugin, useEditorStatus } from '@liveblocks/react-lexical'
@@ -58,7 +59,7 @@ class EditorErrorBoundary extends Component<{ children: ReactNode }, { hasError:
   }
 }
 
-export function Editor({ roomId, currentUserType }: { roomId: string, currentUserType: UserType }) {
+export function Editor({ roomId, currentUserType, documentTitle = 'Untitled Document' }: { roomId: string, currentUserType: UserType, documentTitle?: string }) {
   const status = useEditorStatus();
   const { threads } = useThreads();
 
@@ -77,14 +78,14 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
     <LexicalComposer initialConfig={initialConfig}>
       <div className="editor-container size-full">
         <div className="toolbar-wrapper flex min-w-full justify-between">
-          <ToolbarPlugin />
+          <ToolbarPlugin documentTitle={documentTitle} />
           {currentUserType === 'editor' && <DeleteModal roomId={roomId} />}
         </div>
 
         <EditorErrorBoundary>
           <div className="editor-wrapper flex flex-col items-center justify-start">
             {status === 'not-loaded' || status === 'loading' ? <Loader /> : (
-              <div className="editor-inner min-h-[60vh] md:min-h-[800px] lg:min-h-[1100px] relative mb-5 h-fit w-full max-w-[800px] shadow-sm border border-border rounded-b-lg lg:mb-10">
+              <div className="editor-inner min-h-[calc(100vh-200px)] relative mb-5 w-full max-w-[800px] shadow-sm border border-border rounded-b-lg lg:mb-10">
                 <RichTextPlugin
                   contentEditable={
                     <ContentEditable className="editor-input h-full" />
@@ -95,6 +96,7 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
                 {currentUserType === 'editor' && <FloatingToolbarPlugin />}
                 <ListPlugin />
                 <LinkPlugin />
+                <ClickableLinkPlugin />
                 <HistoryPlugin />
                 <AutoFocusPlugin />
                 <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card/80 backdrop-blur-sm rounded-b-lg">
