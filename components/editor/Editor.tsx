@@ -13,7 +13,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import React from 'react';
+import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 
 import { FloatingComposer, FloatingThreads, liveblocksConfig, LiveblocksPlugin, useEditorStatus } from '@liveblocks/react-lexical'
 import Loader from '../Loader';
@@ -27,6 +27,35 @@ import { DeleteModal } from '../DeleteModal';
 
 function Placeholder() {
   return <div className="editor-placeholder">Start writing...</div>;
+}
+
+class EditorErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('Editor error:', error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center gap-3 p-10 text-center">
+          <p className="text-sm text-muted-foreground">Something went wrong with the editor.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+          >
+            Reload page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 export function Editor({ roomId, currentUserType }: { roomId: string, currentUserType: UserType }) {
@@ -52,34 +81,36 @@ export function Editor({ roomId, currentUserType }: { roomId: string, currentUse
           {currentUserType === 'editor' && <DeleteModal roomId={roomId} />}
         </div>
 
-        <div className="editor-wrapper flex flex-col items-center justify-start">
-          {status === 'not-loaded' || status === 'loading' ? <Loader /> : (
-            <div className="editor-inner min-h-[1100px] relative mb-5 h-fit w-full max-w-[800px] shadow-sm border border-border rounded-b-lg lg:mb-10">
-              <RichTextPlugin
-                contentEditable={
-                  <ContentEditable className="editor-input h-full" />
-                }
-                placeholder={<Placeholder />}
-                ErrorBoundary={LexicalErrorBoundary}
-              />
-              {currentUserType === 'editor' && <FloatingToolbarPlugin />}
-              <ListPlugin />
-              <LinkPlugin />
-              <HistoryPlugin />
-              <AutoFocusPlugin />
-              <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card/80 backdrop-blur-sm rounded-b-lg">
-                <WordCountPlugin />
+        <EditorErrorBoundary>
+          <div className="editor-wrapper flex flex-col items-center justify-start">
+            {status === 'not-loaded' || status === 'loading' ? <Loader /> : (
+              <div className="editor-inner min-h-[60vh] md:min-h-[800px] lg:min-h-[1100px] relative mb-5 h-fit w-full max-w-[800px] shadow-sm border border-border rounded-b-lg lg:mb-10">
+                <RichTextPlugin
+                  contentEditable={
+                    <ContentEditable className="editor-input h-full" />
+                  }
+                  placeholder={<Placeholder />}
+                  ErrorBoundary={LexicalErrorBoundary}
+                />
+                {currentUserType === 'editor' && <FloatingToolbarPlugin />}
+                <ListPlugin />
+                <LinkPlugin />
+                <HistoryPlugin />
+                <AutoFocusPlugin />
+                <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card/80 backdrop-blur-sm rounded-b-lg">
+                  <WordCountPlugin />
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <LiveblocksPlugin>
-            <FloatingComposer className="w-[350px]" />
-            <FloatingThreads threads={threads} />
-            <Comments />
-          </LiveblocksPlugin>
-          <ShortcutsPlugin />
-        </div>
+            <LiveblocksPlugin>
+              <FloatingComposer className="w-[350px]" />
+              <FloatingThreads threads={threads} />
+              <Comments />
+            </LiveblocksPlugin>
+            <ShortcutsPlugin />
+          </div>
+        </EditorErrorBoundary>
       </div>
     </LexicalComposer>
   );

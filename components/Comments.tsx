@@ -26,6 +26,12 @@ const Comments = () => {
     <div className="comments-container">
       <Composer className="comment-composer" />
 
+      {threads.length === 0 && (
+        <p className="py-6 text-center text-sm text-muted-foreground">
+          No comments yet. Select text and click the comment button to start a discussion.
+        </p>
+      )}
+
       {threads.map((thread) => (
         <ThreadWrapper key={thread.id} thread={thread} />
       ))}

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import UserTypeSelector from './UserTypeSelector';
 import { Button } from './ui/button';
 import { removeCollaborator, updateDocumentAccess } from '@/lib/actions/room.actions';
+import { toast } from 'sonner';
 
 const Collaborator = ({ roomId, creatorId, collaborator, email, user }: CollaboratorProps) => {
   const [userType, setUserType] = useState(collaborator.userType || 'viewer');
@@ -10,23 +11,31 @@ const Collaborator = ({ roomId, creatorId, collaborator, email, user }: Collabor
 
   const shareDocumentHandler = async (type: string) => {
     setLoading(true);
-
-    await updateDocumentAccess({
-      roomId,
-      email,
-      userType: type as UserType,
-      updatedBy: user
-    });
-
-    setLoading(false);
+    try {
+      await updateDocumentAccess({
+        roomId,
+        email,
+        userType: type as UserType,
+        updatedBy: user
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to update access');
+    } finally {
+      setLoading(false);
+    }
   }
 
   const removeCollaboratorHandler = async (email: string) => {
     setLoading(true);
-
-    await removeCollaborator({ roomId, email });
-
-    setLoading(false);
+    try {
+      await removeCollaborator({ roomId, email });
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to remove collaborator');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -58,7 +67,7 @@ const Collaborator = ({ roomId, creatorId, collaborator, email, user }: Collabor
         <div className="flex items-center gap-1">
           <UserTypeSelector
             userType={userType as UserType}
-            setUserType={setUserType || 'viewer'}
+            setUserType={setUserType}
             onClickHandler={shareDocumentHandler}
           />
           <Button

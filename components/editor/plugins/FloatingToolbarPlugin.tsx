@@ -108,7 +108,7 @@ function Toolbar({
         minWidth: 'max-content',
       }}
     >
-      <div className="floating-toolbar">
+      <div className="floating-toolbar" role="toolbar" aria-label="Text actions">
         <button
           onClick={() => {
             const isOpen = editor.dispatchCommand(
@@ -120,6 +120,8 @@ function Toolbar({
             }
           }}
           className="floating-toolbar-btn"
+          aria-label="Add comment"
+          title="Add comment"
         >
           <Image
             src="/assets/icons/comment.svg"

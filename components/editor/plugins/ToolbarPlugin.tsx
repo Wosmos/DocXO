@@ -32,10 +32,8 @@ import {
   INSERT_ORDERED_LIST_COMMAND,
   INSERT_UNORDERED_LIST_COMMAND,
   $isListNode,
-  ListNode,
 } from '@lexical/list';
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
-import React from 'react';
 import {
   useCallback,
   useEffect,
@@ -43,8 +41,34 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Undo2,
+  Redo2,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Heading1,
+  Heading2,
+  Heading3,
+  Quote,
+  Code,
+  List,
+  ListOrdered,
+  Link,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+} from 'lucide-react';
 
 const LowPriority = 1;
+const ICON_SIZE = 18;
 
 function Divider() {
   return <div className="divider" />;
@@ -141,19 +165,29 @@ export default function ToolbarPlugin() {
     }
   }
 
+  const [linkUrl, setLinkUrl] = useState('');
+  const [linkOpen, setLinkOpen] = useState(false);
+
   const insertLink = () => {
     if (isLink) {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     } else {
-      const url = prompt('Enter URL:');
-      if (url) {
-        editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
-      }
+      setLinkUrl('');
+      setLinkOpen(true);
+    }
+  };
+
+  const confirmLink = () => {
+    const url = linkUrl.trim();
+    if (url && /^https?:\/\/.+/.test(url)) {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+      setLinkOpen(false);
+      setLinkUrl('');
     }
   };
 
   return (
-    <div className="toolbar" ref={toolbarRef}>
+    <div className="toolbar" ref={toolbarRef} role="toolbar" aria-label="Formatting options">
       <button
         disabled={!canUndo}
         onClick={() => {
@@ -161,8 +195,9 @@ export default function ToolbarPlugin() {
         }}
         className="toolbar-item spaced"
         aria-label="Undo"
+        title="Undo (Ctrl+Z)"
       >
-        <i className="format undo" />
+        <Undo2 size={ICON_SIZE} />
       </button>
       <button
         disabled={!canRedo}
@@ -171,36 +206,43 @@ export default function ToolbarPlugin() {
         }}
         className="toolbar-item"
         aria-label="Redo"
+        title="Redo (Ctrl+Y)"
       >
-        <i className="format redo" />
+        <Redo2 size={ICON_SIZE} />
       </button>
       <Divider />
       <button
         onClick={() => editor.update(() => toggleBlock('h1'))}
-        data-active={activeBlock === 'h1' ? '' : undefined}
+        aria-pressed={activeBlock === 'h1'}
         className={
           'toolbar-item spaced ' + (activeBlock === 'h1' ? 'active' : '')
         }
+        aria-label="Heading 1"
+        title="Heading 1"
       >
-        <i className="format h1" />
+        <Heading1 size={ICON_SIZE} />
       </button>
       <button
         onClick={() => editor.update(() => toggleBlock('h2'))}
-        data-active={activeBlock === 'h2' ? '' : undefined}
+        aria-pressed={activeBlock === 'h2'}
         className={
           'toolbar-item spaced ' + (activeBlock === 'h2' ? 'active' : '')
         }
+        aria-label="Heading 2"
+        title="Heading 2"
       >
-        <i className="format h2" />
+        <Heading2 size={ICON_SIZE} />
       </button>
       <button
         onClick={() => editor.update(() => toggleBlock('h3'))}
-        data-active={activeBlock === 'h3' ? '' : undefined}
+        aria-pressed={activeBlock === 'h3'}
         className={
           'toolbar-item spaced ' + (activeBlock === 'h3' ? 'active' : '')
         }
+        aria-label="Heading 3"
+        title="Heading 3"
       >
-        <i className="format h3" />
+        <Heading3 size={ICON_SIZE} />
       </button>
       <button
         onClick={() => editor.update(() => toggleBlock('quote'))}
@@ -210,10 +252,7 @@ export default function ToolbarPlugin() {
         aria-label="Block Quote"
         title="Block Quote"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z" />
-          <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3z" />
-        </svg>
+        <Quote size={ICON_SIZE} />
       </button>
       <Divider />
       <button
@@ -221,36 +260,44 @@ export default function ToolbarPlugin() {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
         }}
         className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
-        aria-label="Format Bold"
+        aria-label="Bold"
+        aria-pressed={isBold}
+        title="Bold (Ctrl+B)"
       >
-        <i className="format bold" />
+        <Bold size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
         }}
         className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
-        aria-label="Format Italics"
+        aria-label="Italic"
+        aria-pressed={isItalic}
+        title="Italic (Ctrl+I)"
       >
-        <i className="format italic" />
+        <Italic size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
         }}
         className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
-        aria-label="Format Underline"
+        aria-label="Underline"
+        aria-pressed={isUnderline}
+        title="Underline (Ctrl+U)"
       >
-        <i className="format underline" />
+        <Underline size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
         }}
         className={'toolbar-item spaced ' + (isStrikethrough ? 'active' : '')}
-        aria-label="Format Strikethrough"
+        aria-label="Strikethrough"
+        aria-pressed={isStrikethrough}
+        title="Strikethrough"
       >
-        <i className="format strikethrough" />
+        <Strikethrough size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
@@ -260,10 +307,7 @@ export default function ToolbarPlugin() {
         aria-label="Inline Code"
         title="Inline Code"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="16 18 22 12 16 6" />
-          <polyline points="8 6 2 12 8 18" />
-        </svg>
+        <Code size={ICON_SIZE} />
       </button>
       <Divider />
       <button
@@ -274,14 +318,7 @@ export default function ToolbarPlugin() {
         aria-label="Bullet List"
         title="Bullet List"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="8" y1="6" x2="21" y2="6" />
-          <line x1="8" y1="12" x2="21" y2="12" />
-          <line x1="8" y1="18" x2="21" y2="18" />
-          <circle cx="3" cy="6" r="1" fill="currentColor" />
-          <circle cx="3" cy="12" r="1" fill="currentColor" />
-          <circle cx="3" cy="18" r="1" fill="currentColor" />
-        </svg>
+        <List size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
@@ -291,26 +328,44 @@ export default function ToolbarPlugin() {
         aria-label="Numbered List"
         title="Numbered List"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="10" y1="6" x2="21" y2="6" />
-          <line x1="10" y1="12" x2="21" y2="12" />
-          <line x1="10" y1="18" x2="21" y2="18" />
-          <text x="1" y="8" fontSize="8" fill="currentColor" stroke="none" fontFamily="sans-serif">1</text>
-          <text x="1" y="14" fontSize="8" fill="currentColor" stroke="none" fontFamily="sans-serif">2</text>
-          <text x="1" y="20" fontSize="8" fill="currentColor" stroke="none" fontFamily="sans-serif">3</text>
-        </svg>
+        <ListOrdered size={ICON_SIZE} />
       </button>
-      <button
-        onClick={insertLink}
-        className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
-        aria-label="Insert Link"
-        title="Insert Link"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-        </svg>
-      </button>
+      <Popover open={linkOpen} onOpenChange={setLinkOpen}>
+        <PopoverTrigger asChild>
+          <button
+            onClick={insertLink}
+            className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
+            aria-label="Insert Link"
+            title="Insert Link"
+          >
+            <Link size={ICON_SIZE} />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-72 p-3" align="start">
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-medium text-muted-foreground">URL</label>
+            <input
+              type="url"
+              value={linkUrl}
+              onChange={(e) => setLinkUrl(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') confirmLink(); }}
+              placeholder="https://example.com"
+              className="h-8 w-full rounded-md border border-border bg-background px-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+              autoFocus
+            />
+            {linkUrl && !/^https?:\/\/.+/.test(linkUrl.trim()) && (
+              <p className="text-xs text-destructive">URL must start with http:// or https://</p>
+            )}
+            <button
+              onClick={confirmLink}
+              disabled={!linkUrl.trim() || !/^https?:\/\/.+/.test(linkUrl.trim())}
+              className="h-8 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Insert Link
+            </button>
+          </div>
+        </PopoverContent>
+      </Popover>
       <Divider />
       <button
         onClick={() => {
@@ -318,8 +373,9 @@ export default function ToolbarPlugin() {
         }}
         className="toolbar-item spaced"
         aria-label="Left Align"
+        title="Left Align"
       >
-        <i className="format left-align" />
+        <AlignLeft size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
@@ -327,8 +383,9 @@ export default function ToolbarPlugin() {
         }}
         className="toolbar-item spaced"
         aria-label="Center Align"
+        title="Center Align"
       >
-        <i className="format center-align" />
+        <AlignCenter size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
@@ -336,8 +393,9 @@ export default function ToolbarPlugin() {
         }}
         className="toolbar-item spaced"
         aria-label="Right Align"
+        title="Right Align"
       >
-        <i className="format right-align" />
+        <AlignRight size={ICON_SIZE} />
       </button>
       <button
         onClick={() => {
@@ -345,8 +403,9 @@ export default function ToolbarPlugin() {
         }}
         className="toolbar-item"
         aria-label="Justify Align"
+        title="Justify Align"
       >
-        <i className="format justify-align" />
+        <AlignJustify size={ICON_SIZE} />
       </button>
     </div>
   );

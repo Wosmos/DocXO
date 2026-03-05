@@ -55,7 +55,7 @@ const ShareModal = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           className='flex h-9 gap-1.5 px-3'
           disabled={currentUserType !== 'editor'}
@@ -90,7 +90,7 @@ const ShareModal = ({
             <UserTypeSelector userType={userType} setUserType={setUserType} />
           </div>
           <Button
-            type='submit'
+            type='button'
             onClick={shareDocumentHandler}
             className='flex h-full gap-1 px-5'
             disabled={loading}

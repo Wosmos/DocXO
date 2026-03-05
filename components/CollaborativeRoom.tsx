@@ -4,9 +4,10 @@ import { Editor } from '@/components/editor/Editor'
 import Header from '@/components/Header'
 import { SignInButton, UserButton, useAuth } from '@clerk/nextjs'
 import ActiveCollaborators from './ActiveCollaborators';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Input } from './ui/input';
 import { updateDocument } from '@/lib/actions/room.actions';
+import { toast } from 'sonner';
 import Loader from './Loader';
 import ShareModal from './ShareModal';
 import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense';
@@ -22,31 +23,35 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const updateTitleHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === 'Enter') {
-      setLoading(true);
+  const savingRef = useRef(false);
 
-      try {
-        if(documentTitle !== roomMetadata.title) {
-          const updatedDocument = await updateDocument(roomId, documentTitle);
-
-          if(updatedDocument) {
-            setEditing(false);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
-
+  const saveTitle = useCallback(async () => {
+    if (savingRef.current || documentTitle === roomMetadata.title) return;
+    savingRef.current = true;
+    setLoading(true);
+    try {
+      await updateDocument(roomId, documentTitle);
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to save title');
+    } finally {
       setLoading(false);
+      savingRef.current = false;
+    }
+  }, [roomId, documentTitle, roomMetadata.title]);
+
+  const updateTitleHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setEditing(false);
+      await saveTitle();
     }
   }
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if(containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setEditing(false);
-        updateDocument(roomId, documentTitle);
+        saveTitle();
       }
     }
 
@@ -55,7 +60,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [roomId, documentTitle])
+  }, [saveTitle])
 
   useEffect(() => {
     if(editing && inputRef.current) {
