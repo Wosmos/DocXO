@@ -174,6 +174,64 @@
     @apply relative inline-flex size-8 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50;
   }
 
+  .floating-toolbar-btn:hover {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  .floating-toolbar-btn.active {
+    @apply bg-primary/10 text-primary;
+  }
+
+  .floating-toolbar-divider {
+    @apply w-px h-5 bg-border;
+  }
+
+  /* AI Menu */
+  .ai-menu {
+    @apply absolute top-full left-0 mt-2 w-52 rounded-lg bg-card border border-border shadow-xl p-1 z-50;
+  }
+
+  .ai-menu-item {
+    @apply flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .ai-menu-icon {
+    @apply shrink-0 text-muted-foreground;
+  }
+
+  .ai-menu-label {
+    @apply font-medium text-sm leading-tight;
+  }
+
+  .ai-menu-desc {
+    @apply text-xs text-muted-foreground leading-tight;
+  }
+
+  /* AI Result Card */
+  .ai-result-card {
+    @apply mb-2 w-[320px] rounded-lg bg-card border border-border shadow-xl p-3;
+  }
+
+  .ai-result-text {
+    @apply text-sm leading-relaxed max-h-40 overflow-auto text-foreground mb-3;
+  }
+
+  .ai-result-actions {
+    @apply flex items-center gap-2;
+  }
+
+  .ai-result-btn {
+    @apply flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors;
+  }
+
+  .ai-result-accept {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .ai-result-reject {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
   /* Toolbar */
   .toolbar-wrapper {
     @apply z-50 custom-scrollbar w-screen overflow-auto border-b border-border bg-card/80 backdrop-blur-sm pl-3 pr-4 shadow-sm;

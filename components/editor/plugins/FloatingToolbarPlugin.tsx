@@ -9,23 +9,46 @@ import {
   useFloating,
 } from '@floating-ui/react-dom';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $insertNodes, $createTextNode } from 'lexical';
 import { OPEN_FLOATING_COMPOSER_COMMAND } from '@liveblocks/react-lexical';
-import type { LexicalEditor, LexicalNode } from 'lexical';
-import { $getSelection, $isRangeSelection, $isTextNode } from 'lexical';
+import type { LexicalEditor, LexicalNode, BaseSelection } from 'lexical';
+import { $getSelection, $isRangeSelection, $isTextNode, $setSelection } from 'lexical';
 import Image from 'next/image';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
+import {
+  Sparkles,
+  RefreshCw,
+  FileText,
+  SpellCheck,
+  Expand,
+  Shrink,
+  GraduationCap,
+  SmilePlus,
+  Loader2,
+  Check,
+  X,
+} from 'lucide-react';
+import { toast } from 'sonner';
+
+const AI_ACTIONS = [
+  { key: 'rewrite', label: 'Rewrite', icon: RefreshCw, desc: 'Clearer & professional' },
+  { key: 'grammar', label: 'Fix Grammar', icon: SpellCheck, desc: 'Fix errors' },
+  { key: 'summarize', label: 'Summarize', icon: FileText, desc: 'Condense text' },
+  { key: 'expand', label: 'Expand', icon: Expand, desc: 'Add more detail' },
+  { key: 'shorten', label: 'Shorten', icon: Shrink, desc: 'Make concise' },
+  { key: 'formal', label: 'Formal', icon: GraduationCap, desc: 'Professional tone' },
+  { key: 'casual', label: 'Casual', icon: SmilePlus, desc: 'Friendly tone' },
+] as const;
 
 export default function FloatingToolbar() {
   const [editor] = useLexicalComposerContext();
-
   const [range, setRange] = useState<Range | null>(null);
 
   useEffect(() => {
     editor.registerUpdateListener(({ tags }) => {
       return editor.getEditorState().read(() => {
-        // Ignore selection updates related to collaboration
         if (tags.has('collaboration')) return;
 
         const selection = $getSelection();
@@ -66,6 +89,11 @@ function Toolbar({
   container: HTMLElement;
 }) {
   const [editor] = useLexicalComposerContext();
+  const [showAiMenu, setShowAiMenu] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [aiResult, setAiResult] = useState<string | null>(null);
+  const savedSelection = useRef<BaseSelection | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const padding = 20;
 
@@ -97,6 +125,91 @@ function Toolbar({
     });
   }, [setReference, range]);
 
+  const getSelectedText = useCallback((): string => {
+    let text = '';
+    editor.getEditorState().read(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        text = selection.getTextContent();
+      }
+    });
+    return text;
+  }, [editor]);
+
+  const handleAiAction = useCallback(async (action: string) => {
+    const text = getSelectedText();
+    if (!text.trim()) {
+      toast.error('No text selected');
+      return;
+    }
+
+    // Save the current selection before async work
+    editor.getEditorState().read(() => {
+      savedSelection.current = $getSelection()?.clone() ?? null;
+    });
+
+    setLoading(true);
+    setAiResult(null);
+
+    try {
+      const res = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, action }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'AI request failed');
+      }
+
+      const data = await res.json();
+      setAiResult(data.result);
+      setShowAiMenu(false);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'AI request failed';
+      toast.error(message);
+      setLoading(false);
+    }
+  }, [editor, getSelectedText]);
+
+  const acceptResult = useCallback(() => {
+    if (!aiResult) return;
+
+    editor.update(() => {
+      if (savedSelection.current) {
+        $setSelection(savedSelection.current);
+      }
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        selection.removeText();
+        $insertNodes([$createTextNode(aiResult)]);
+      }
+    });
+
+    setAiResult(null);
+    setLoading(false);
+    onRangeChange(null);
+    toast.success('Text replaced');
+  }, [editor, aiResult, onRangeChange]);
+
+  const rejectResult = useCallback(() => {
+    setAiResult(null);
+    setLoading(false);
+  }, []);
+
+  // Close AI menu on outside click
+  useEffect(() => {
+    if (!showAiMenu) return;
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowAiMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showAiMenu]);
+
   return createPortal(
     <div
       ref={setFloating}
@@ -108,7 +221,23 @@ function Toolbar({
         minWidth: 'max-content',
       }}
     >
-      <div className="floating-toolbar" role="toolbar" aria-label="Text actions">
+      {/* AI Result Preview */}
+      {aiResult && (
+        <div className="ai-result-card">
+          <div className="ai-result-text">{aiResult}</div>
+          <div className="ai-result-actions">
+            <button onClick={acceptResult} className="ai-result-btn ai-result-accept" title="Accept">
+              <Check size={14} /> Accept
+            </button>
+            <button onClick={rejectResult} className="ai-result-btn ai-result-reject" title="Discard">
+              <X size={14} /> Discard
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="floating-toolbar" role="toolbar" aria-label="Text actions" ref={menuRef}>
+        {/* Comment button */}
         <button
           onClick={() => {
             const isOpen = editor.dispatchCommand(
@@ -130,6 +259,39 @@ function Toolbar({
             height={24}
           />
         </button>
+
+        {/* Divider */}
+        <div className="floating-toolbar-divider" />
+
+        {/* AI button */}
+        <button
+          onClick={() => setShowAiMenu(!showAiMenu)}
+          className={`floating-toolbar-btn ${showAiMenu ? 'active' : ''}`}
+          aria-label="AI actions"
+          title="AI Actions"
+          disabled={loading}
+        >
+          {loading ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
+        </button>
+
+        {/* AI dropdown menu */}
+        {showAiMenu && !loading && (
+          <div className="ai-menu">
+            {AI_ACTIONS.map(({ key, label, icon: Icon, desc }) => (
+              <button
+                key={key}
+                onClick={() => handleAiAction(key)}
+                className="ai-menu-item"
+              >
+                <Icon size={14} className="ai-menu-icon" />
+                <div>
+                  <div className="ai-menu-label">{label}</div>
+                  <div className="ai-menu-desc">{desc}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>,
     container,
