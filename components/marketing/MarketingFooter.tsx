@@ -2,48 +2,79 @@ import Link from 'next/link';
 
 export default function MarketingFooter() {
   return (
-    <footer className="border-t border-border bg-card/50 py-12">
+    <footer className="border-t border-border/60 pb-10 pt-11">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
-            <Link href="/" className="flex items-center gap-2">
-              <svg width="24" height="24" viewBox="0 0 32 32" fill="none" className="text-primary">
-                <rect width="32" height="32" rx="8" fill="currentColor" />
-                <path d="M8 12L12 8H20L24 12V20L20 24H12L8 20V12Z" fill="white" fillOpacity="0.9" />
-                <path d="M13 14H19V15.5H13V14ZM13 17H17V18.5H13V17Z" fill="currentColor" />
-              </svg>
-              <span className="font-semibold">Wosmo</span>
+            <Link
+              href="/"
+              className="font-serif text-2xl font-bold tracking-tight dark:font-sans dark:font-extrabold dark:tracking-tighter"
+            >
+              Doc<span className="text-primary">XO</span>
             </Link>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Collaborative writing, beautifully simple.
+            <p className="mt-2.5 max-w-[28ch] font-sans text-sm text-muted-foreground">
+              Collaborative writing, beautifully simple. Draft together in real time.
             </p>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-foreground">Product</h4>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/#features" className="hover:text-foreground transition-colors">Features</Link></li>
-              <li><Link href="/pricing" className="hover:text-foreground transition-colors">Pricing</Link></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Changelog</a></li>
-            </ul>
+            <h4 className="font-mono text-[11px] uppercase tracking-[.12em] text-muted-foreground">
+              Product
+            </h4>
+            <div className="mt-3 flex flex-col gap-2">
+              <Link href="/#live" className="font-sans text-sm text-foreground/80 hover:text-primary">Real-time editing</Link>
+              <Link href="/#live" className="font-sans text-sm text-foreground/80 hover:text-primary">Comments</Link>
+              <Link href="/#history" className="font-sans text-sm text-foreground/80 hover:text-primary">Version history</Link>
+              <Link href="/pricing" className="font-sans text-sm text-foreground/80 hover:text-primary">Pricing</Link>
+            </div>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-foreground">Resources</h4>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Support</a></li>
-            </ul>
+            <h4 className="font-mono text-[11px] uppercase tracking-[.12em] text-muted-foreground">
+              Resources
+            </h4>
+            <div className="mt-3 flex flex-col gap-2">
+              <a href="#" className="font-sans text-sm text-foreground/80 hover:text-primary">Docs</a>
+              <a href="#" className="font-sans text-sm text-foreground/80 hover:text-primary">Changelog</a>
+              <a href="#" className="font-sans text-sm text-foreground/80 hover:text-primary">Keyboard shortcuts</a>
+            </div>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-foreground">Legal</h4>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Privacy</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Terms</a></li>
-            </ul>
+            <h4 className="font-mono text-[11px] uppercase tracking-[.12em] text-muted-foreground">
+              Made by
+            </h4>
+            <div className="mt-3 flex flex-col gap-2">
+              <a
+                href="https://wosmos.vercel.app"
+                target="_blank"
+                rel="noreferrer"
+                className="font-sans text-sm text-foreground/80 hover:text-primary"
+              >
+                Wasif Malik
+              </a>
+              <a
+                href="https://github.com/Wosmos/DocXO"
+                target="_blank"
+                rel="noreferrer"
+                className="font-sans text-sm text-foreground/80 hover:text-primary"
+              >
+                GitHub
+              </a>
+            </div>
           </div>
         </div>
-        <div className="mt-12 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} Wosmo. All rights reserved.
+
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-2.5 border-t border-border/60 pt-[18px] font-sans text-[13px] text-muted-foreground">
+          <span>&copy; {new Date().getFullYear()} DocXO</span>
+          <span>
+            Crafted by{' '}
+            <a
+              href="https://wosmos.vercel.app"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-primary"
+            >
+              Wasif Malik
+            </a>
+          </span>
         </div>
       </div>
     </footer>

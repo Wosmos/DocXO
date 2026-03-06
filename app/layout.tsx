@@ -1,4 +1,4 @@
-import { Inter as FontSans } from "next/font/google"
+import { Inter as FontSans, Newsreader as FontSerif } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 import './globals.css'
@@ -14,9 +14,15 @@ const fontSans = FontSans({
   variable: "--font-sans",
 })
 
+const fontSerif = FontSerif({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+})
+
 export const metadata: Metadata = {
-  title: 'Wosmo',
-  description: 'Collaborative writing, beautifully simple.',
+  title: 'DocXO',
+  description: 'Collaborative writing, beautifully simple. Draft together in real time.',
   icons: { icon: '/favicon.ico' },
 }
 
@@ -45,7 +51,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <body
           className={cn(
             "min-h-screen font-sans antialiased",
-            fontSans.variable
+            fontSans.variable,
+            fontSerif.variable
           )}
         >
           <ThemeProvider>

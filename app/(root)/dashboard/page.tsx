@@ -29,7 +29,7 @@ const Home = async () => {
       {roomDocuments.data.length > 0 ? (
         <div className="document-list-container">
           <div className="document-list-title">
-            <h3 className="text-28-semibold text-foreground">All documents</h3>
+            <h3 className="text-28-semibold font-serif text-foreground dark:font-sans dark:font-extrabold">All documents</h3>
             <div className="flex items-center gap-2">
               <TemplateModal
                 userId={clerkUser.id}

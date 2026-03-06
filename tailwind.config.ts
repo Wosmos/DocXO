@@ -57,9 +57,22 @@ const config = {
           DEFAULT: 'hsl(var(--surface))',
           foreground: 'hsl(var(--surface-foreground))',
         },
+        accent2: {
+          DEFAULT: 'hsl(var(--accent-2))',
+        },
+        accent3: {
+          DEFAULT: 'hsl(var(--accent-3))',
+        },
+        soft: {
+          DEFAULT: 'hsl(var(--soft))',
+        },
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'Georgia', 'serif'],
+      },
+      boxShadow: {
+        editorial: 'var(--shadow-editorial)',
       },
       borderRadius: {
         lg: 'var(--radius)',

@@ -31,6 +31,13 @@
     --surface: 240 5% 96%;
     --surface-foreground: 240 6% 10%;
     --radius: 0.625rem;
+
+    /* ── editorial identity: multiplayer accent + soft surfaces ── */
+    --accent-2: 175 82% 39%;
+    --accent-3: 343 100% 71%;
+    --soft: 248 100% 96%;
+    --shadow-editorial: 0 30px 60px -40px rgba(60, 45, 110, 0.4);
+    --glow-editorial: none;
   }
 
   .dark {
@@ -56,6 +63,14 @@
     --surface: 240 4% 12%;
     --surface-foreground: 0 0% 96%;
     --radius: 0.625rem;
+
+    /* ── editorial identity: kinetic accent + soft surfaces ── */
+    --accent-2: 189 85% 53%;
+    --accent-3: 337 100% 73%;
+    --soft: 249 40% 20%;
+    --shadow-editorial: 0 40px 90px -46px rgba(0, 0, 0, 0.9);
+    --glow-editorial: radial-gradient(55% 55% at 74% 2%, rgba(124, 92, 255, 0.2), transparent 70%),
+      radial-gradient(45% 45% at 4% 94%, rgba(34, 211, 238, 0.14), transparent 72%);
   }
 }
 
@@ -474,4 +489,151 @@
 
 .lb-elevation {
   background: hsl(var(--card));
+}
+
+/* ========================================== EDITORIAL IDENTITY */
+/* Thin-line icon signature, applied globally to every lucide-react icon */
+svg.lucide {
+  stroke-width: 1.5px;
+}
+
+/* Gradient headline text (kinetic in dark, solid accent in light) */
+.text-gradient-accent {
+  background-image: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark .text-gradient-accent {
+  background-image: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent-2)));
+}
+
+/* Ambient glow behind the hero, kinetic-mode only */
+.editorial-glow {
+  background-image: var(--glow-editorial);
+  background-attachment: fixed;
+}
+
+/* Marquee */
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Live multiplayer editor demo */
+@keyframes cursor-a {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  30% {
+    transform: translate(150px, 6px);
+  }
+  60% {
+    transform: translate(50px, 46px);
+  }
+}
+
+@keyframes cursor-b {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40% {
+    transform: translate(-80px, 26px);
+  }
+  70% {
+    transform: translate(26px, -58px);
+  }
+}
+
+@keyframes pop-in {
+  0%,
+  12% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  18%,
+  82% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes type-reveal {
+  0% {
+    max-width: 0;
+  }
+  45%,
+  55% {
+    max-width: 22ch;
+  }
+  100% {
+    max-width: 0;
+  }
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-cursor-a {
+  animation: cursor-a 7s ease-in-out infinite;
+}
+
+.animate-cursor-b {
+  animation: cursor-b 8s ease-in-out infinite;
+}
+
+.animate-pop-in {
+  animation: pop-in 8s ease-in-out infinite;
+}
+
+.animate-type-reveal {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  max-width: 0;
+  animation: type-reveal 5s steps(38) infinite;
+}
+
+.animate-caret-blink {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@media (max-width: 900px) {
+  .live-comment-popup {
+    position: static !important;
+    width: auto !important;
+    margin-top: 14px;
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cursor-a,
+  .animate-cursor-b,
+  .animate-pop-in,
+  .animate-type-reveal,
+  .animate-caret-blink,
+  .marquee-track {
+    animation: none !important;
+  }
+  .animate-type-reveal {
+    max-width: 22ch;
+  }
 }

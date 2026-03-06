@@ -10,8 +10,8 @@ const Header = ({ children, className }: HeaderProps) => {
           <path d="M8 12L12 8H20L24 12V20L20 24H12L8 20V12Z" fill="white" fillOpacity="0.9" />
           <path d="M13 14H19V15.5H13V14ZM13 17H17V18.5H13V17Z" fill="currentColor" />
         </svg>
-        <span className='hidden md:block text-lg font-semibold tracking-tight text-foreground'>
-          Wosmo
+        <span className='hidden md:block font-serif text-lg font-bold tracking-tight text-foreground dark:font-sans dark:font-extrabold dark:tracking-tighter'>
+          Doc<span className="text-primary">XO</span>
         </span>
       </Link>
       {children}

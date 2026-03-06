@@ -1,0 +1,5 @@
+allowBuilds:
+  '@clerk/shared': true
+  '@sentry/cli': true
+  core-js: true
+  unrs-resolver: true

@@ -5,7 +5,7 @@ import { ArrowRight, Check, Minus } from 'lucide-react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Pricing - Wosmo',
+  title: 'Pricing - DocXO',
   description: 'Simple, transparent pricing for teams of all sizes.',
 };
 
@@ -96,7 +96,7 @@ export default function PricingPage() {
           <div className="h-[500px] w-[700px] rounded-full bg-primary/6 blur-3xl dark:bg-primary/4" />
         </div>
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          <h1 className="font-serif text-4xl font-semibold tracking-tight text-balance sm:text-5xl dark:font-sans dark:font-extrabold">
             Simple, transparent pricing
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
@@ -127,7 +127,7 @@ export default function PricingPage() {
                 )}
 
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground">{tier.name}</h3>
+                  <h3 className="font-serif text-lg font-semibold text-foreground dark:font-sans dark:font-extrabold">{tier.name}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{tier.description}</p>
                 </div>
 
@@ -172,7 +172,7 @@ export default function PricingPage() {
       {/* ─── FAQ ─── */}
       <section className="border-t border-border/50 bg-muted/20 py-24 sm:py-32">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="text-center font-serif text-3xl font-semibold tracking-tight sm:text-4xl dark:font-sans dark:font-extrabold">
             Frequently asked questions
           </h2>
           <div className="mt-12 space-y-4">
@@ -189,8 +189,8 @@ export default function PricingPage() {
       {/* ─── CTA ─── */}
       <section className="py-24 sm:py-32">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Start building with Wosmo today
+          <h2 className="font-serif text-3xl font-semibold tracking-tight sm:text-4xl dark:font-sans dark:font-extrabold">
+            Start building with <span className="text-primary">DocXO</span> today
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
             Free forever for individuals. No credit card required.
